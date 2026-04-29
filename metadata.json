@@ -1,0 +1,6 @@
+{
+  "name": "MedCouncil AI",
+  "description": "Multi-agent LLM council for collaborative medical research and deliberation.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
