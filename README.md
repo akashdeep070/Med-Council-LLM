@@ -34,7 +34,8 @@ This project is organized into a modern client/service architecture with:
 *For full architectural details, sequence diagrams, and future scalability considerations, please refer to [SYSTEM_ARCHITECTURE.md](./SYSTEM_ARCHITECTURE.md).*
 
 ```mermaid
-graph LR
+%%{init: {"themeVariables": {"fontSize": "18px"}}}%%
+graph TD
     classDef ui fill:#2563EB,stroke:#1E3A8A,stroke-width:2px,color:#fff,rx:8,ry:8;
     classDef router fill:#059669,stroke:#064E3B,stroke-width:2px,color:#fff,rx:8,ry:8;
     classDef rag fill:#D97706,stroke:#78350F,stroke-width:2px,color:#fff,rx:8,ry:8;
