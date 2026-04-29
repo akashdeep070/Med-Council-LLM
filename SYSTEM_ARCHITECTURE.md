@@ -14,17 +14,60 @@ The application simulates a medical council using a multi-agent AI architecture.
 **Workflow Diagram:**
 ```mermaid
 graph TD
-    A[User Query] --> B(RAG Service)
-    B -->|Clinical Context| C{Council Service Orchestrator}
-    C -->|Prompt + Context| D[Diagnostician Agent]
-    C -->|Prompt + Context| E[Risk Evaluator Agent]
-    C -->|Prompt + Context| F[Treatment Planner Agent]
-    C -->|Prompt + Context| G[Evidence Reviewer Agent]
-    D --> H(Chairman Synthesizer)
-    E --> H
-    F --> H
-    G --> H
-    H -->|Conflict Resolution & JSON Parsing| I[Final Medical Action Plan UI]
+    %% Frontend Layer
+    subgraph Frontend [Frontend Layer]
+        UI[Interactive Medical Dashboard<br/>React / Vite / TailwindCSS]
+        Stream[Real-Time Streaming JSON Parser]
+    end
+
+    %% Service / Orchestration Layer
+    subgraph Orchestration [Orchestration Layer]
+        CSO{Council Service Orchestrator<br/>TypeScript}
+        RAG(RAG Retrieval Broker)
+        KB[(In-Memory Clinical Knowledge Base)]
+    end
+
+    %% AI Council Layer
+    subgraph AICouncil [Multi-Agent Council]
+        DA[Diagnostician Agent<br/>Focus: Clinical Findings]
+        RE[Risk Evaluator Agent<br/>Focus: Safety & Contraindications]
+        TP[Treatment Planner Agent<br/>Focus: Medical Interventions]
+        ER[Evidence Reviewer Agent<br/>Focus: Guidelines & Literature]
+    end
+
+    %% Synthesis Layer
+    subgraph Synthesis [Synthesis Layer]
+        Chairman{Chairman Synthesizer<br/>Resolves Conflicts & Flags Risks}
+    end
+
+    %% External Services
+    subgraph External [External Services]
+        LLM[Groq API<br/>Mixtral 8x7b LPU Inference]
+    end
+
+    UI -->|Submits Clinical Case| CSO
+    CSO -->|Extracts Keywords| RAG
+    RAG <-->|Scores Token Relevance| KB
+    RAG -->|Injects Medical Context| CSO
+    
+    CSO -->|Prompt + Context| DA
+    CSO -->|Prompt + Context| RE
+    CSO -->|Prompt + Context| TP
+    CSO -->|Prompt + Context| ER
+    
+    DA -.->|API Request| LLM
+    RE -.->|API Request| LLM
+    TP -.->|API Request| LLM
+    ER -.->|API Request| LLM
+    
+    DA -->|Agent Output| Chairman
+    RE -->|Agent Output| Chairman
+    TP -->|Agent Output| Chairman
+    ER -->|Agent Output| Chairman
+    
+    Chairman -.->|Final Synthesis Request| LLM
+    Chairman -->|Strict JSON Medical Action Plan| Stream
+    Stream --> UI
 ```
 
 ## 3. Migration to Groq API
